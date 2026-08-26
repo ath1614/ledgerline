@@ -1,0 +1,8 @@
+node_modules
+dist
+deploy
+.wrangler
+.shots
+.jury
+*.local
+.DS_Store
