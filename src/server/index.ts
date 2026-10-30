@@ -19,7 +19,6 @@ import { ensureSchema, ensureSeed } from './schema';
 
 const app = new Hono<{ Bindings: Env }>();
 const repoCache = new WeakMap<object, LedgerRepo>();
-let ready: Promise<void> | null = null;
 
 function repoFor(env: Env): LedgerRepo {
   let repo = repoCache.get(env.DB);
@@ -30,18 +29,26 @@ function repoFor(env: Env): LedgerRepo {
   return repo;
 }
 
-/** Create the schema and demo ledger once per isolate, and retry on the next request if it failed. */
-async function ensureReady(env: Env): Promise<void> {
+/**
+ * Create the schema and demo ledger once per database, and retry on the next request if it
+ * failed. Keyed by the binding rather than by module, so a test can hold two fresh databases
+ * in one process and still get each of them seeded.
+ */
+const readiness = new WeakMap<object, Promise<void>>();
+
+function ensureReady(env: Env): Promise<void> {
+  let ready = readiness.get(env.DB);
   if (!ready) {
     ready = (async () => {
       await ensureSchema(env.DB);
       await ensureSeed(env.DB);
     })().catch((error) => {
-      ready = null;
+      readiness.delete(env.DB);
       throw error;
     });
+    readiness.set(env.DB, ready);
   }
-  await ready;
+  return ready;
 }
 
 const merchantName = (id: string): string => MERCHANTS.find((merchant) => merchant.id === id)?.name ?? id;

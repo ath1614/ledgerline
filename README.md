@@ -69,9 +69,15 @@ curl -X POST http://127.0.0.1:8787/api/events \
 npm test
 ```
 
-41 tests on Vitest, including a fast-check property that asserts conservation of value for 500
+45 tests on Vitest, including a fast-check property that asserts conservation of value for 500
 generated amount and fee pairs, a seeded 30 day fixture that must balance to zero, negative cases
 for unbalanced entries, and a regression for each planted incident.
+
+The last four run the real routes against a real SQLite database (`node:sqlite` behind the `D1Database`
+interface): eight concurrent retries of one idempotency key post a single charge, a batch that dies
+mid-write rolls back and leaves no idempotency row to sink the retry, and twenty distinct keys
+arriving together still balance to zero. The same eight-way race against the deployed Worker returns
+one `201`, seven `200`s, one event id, and a ledger that still balances.
 
 ## Run locally
 

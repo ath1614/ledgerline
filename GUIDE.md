@@ -56,7 +56,7 @@ the unique key makes the loser fail — and the handler then returns the winner.
 npm install
 npm run dev:api    # Worker + local D1 on :8787
 npm run dev        # site on :5173
-npm test           # 41 tests
+npm test           # 45 tests, including the concurrency and crash-recovery cases
 ```
 
 ## 6. Words you will meet
