@@ -7,7 +7,7 @@ with explainable risk rules, and reconciles a processor settlement file against 
 demo ledger holds 30 days of synthetic traffic across six merchants, with four incidents planted
 so the detector can be graded against known answers.
 
-Live: **https://site-0d8b21eb9da849cc99a7c23ecb9589aa.freebuff.page**
+Live: **https://ledgerline.ath1614.workers.dev**
 
 ## Why
 
