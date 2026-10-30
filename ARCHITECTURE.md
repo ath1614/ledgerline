@@ -19,8 +19,8 @@
                             └─────────────┘
 ```
 
-The React app is a static bundle. There is no server rendering, because the only thing that needs
-the server is the ledger itself.
+The React app ships as a prebuilt bundle served by the same Worker as the API; the ledger lives in
+D1 and every screen is filled from a fetch.
 
 ## Decisions
 
